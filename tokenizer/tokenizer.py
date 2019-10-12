@@ -26,13 +26,14 @@ class Tokenizer(object):
     def __init__(self):
         super(Tokenizer, self).__init__()
 
-    def tokenize(self, data):
+    def tokenize(self, data) -> list:
+        output = list()
         for text in data:
             sentences = self.get_sentences(text)
             sentences = [sentence for sentence in sentences if sentence!=""]
             for sentence in sentences:
-                print(self.tokenize_sentence(sentence))
-
+                output.append(self.tokenize_sentence(sentence))
+        return output
 
     def get_sentences(self, text):
         for regexp, substitution in END_CHARS:
