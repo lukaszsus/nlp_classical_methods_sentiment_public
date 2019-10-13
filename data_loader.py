@@ -6,7 +6,7 @@ def load_text_file(filename):
     dataset = []
     f = open(f"{PATH_TO_DATA}/{filename}", "r")
     for x in f:
-        dataset.append(x.replace("\r\n", "\n"))
-        # dataset.append(x.replace("\n", ""))
+        x = x.replace("\r\n", "\n").replace("\n", "")
+        dataset.append(x)
 
-    return np.array(dataset)
+    return " ".join(dataset)
