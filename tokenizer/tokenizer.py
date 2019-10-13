@@ -21,12 +21,22 @@ END_CHARS = [
     (re.compile(r'(\.{3})([\s]+)'), r"\g<0> " + END_OF_SENTENCE),         # '...' usually finishes sentence in Polish
     (re.compile(r'([?]\s+)'), r"\1 " + END_OF_SENTENCE),
     (re.compile(r'([!]\s+)'), r"\1 " + END_OF_SENTENCE),
-    (re.compile(r'((\.) ([A-Z]))'), r"\g<2>" + END_OF_SENTENCE + r" \g<3>"), # new sentence starts with '. [UpperCaseLetter]'
-    (re.compile(r'((\.) ((\"|\'|\-)[A-Z]))'), r"\g<2>" + END_OF_SENTENCE + r" \g<3>"),  # new sentence starts with '. [" or ' or -][UpperCaseLetter]'
+    (re.compile(r'((\.) ([A-Z]))'), r" \g<2>" + END_OF_SENTENCE + r" \g<3>"), # new sentence starts with '. [UpperCaseLetter]'
+    (re.compile(r'((\.) ((\"|\'|\-)[A-Z]))'), r" \g<2>" + END_OF_SENTENCE + r" \g<3>"),  # new sentence starts with '. [" or ' or -][UpperCaseLetter]'
 ]
 
 SHORTCUTS_EXCEPTION_FILEPATH = f"{PROJECT_PATH}/tokenizer/shortcuts_exceptions.txt"
 
+SPECIAL_TOKENS_REG_EXPRESSIONS = {
+    "date": [
+        re.compile(r'([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))'),
+        re.compile(r'([12]\d{3}.(0[1-9]|1[0-2]).(0[1-9]|[12]\d|3[01]))'),
+    ],
+    "mail":[
+        re.compile(r'([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)'),
+    ]
+
+}
 #TODO Handle sentence 'Zakończenie skrótem r.?'
 
 
@@ -69,7 +79,18 @@ class Tokenizer(object):
         tokenized = [word.replace(" ", "") for word in tokenized if word != ""]
         tokenized = self.__correct_ending_shortcut(tokenized)
 
+        [self.check_possible_tokens(tokens) for tokens in tokenized]
         return tokenized
+
+    def check_possible_tokens(self, token):
+        possible_tokens = []
+        for key, value in SPECIAL_TOKENS_REG_EXPRESSIONS.items():
+            for regexp in value:
+                if regexp.match(token):
+                    possible_tokens.append(key)
+
+        if possible_tokens:
+            print(f"{token} possible token types: {possible_tokens}")
 
     def white_space_tokenizer(self, string):
         return string.split(" ")
@@ -82,7 +103,7 @@ class Tokenizer(object):
                 new_sentences[-1].extend(sentence)
             else:
                 new_sentences.append(sentence)
-            last_sentence_last_word = sentence[-1]
+            last_sentence_last_word = f"{sentence[-2]}{sentence[-1]}"
 
         return new_sentences
 
@@ -90,7 +111,7 @@ class Tokenizer(object):
         if len(words) > 0:
             last_word: str = words[-1]
             if len(last_word) > 1:
-                last_word = re.sub(r'(\.[^.])$', r"\1.", last_word)
+                last_word = re.sub(r'(\.[^.])$', r"\1 .", last_word)
             else:
                 last_word = re.sub(r'(\w)$', r"\1.", last_word)     # sentence finished with one letter shortcut
             words[-1] = last_word
