@@ -7,10 +7,11 @@ def print_analysis(analysis):
     for element in analysis:
         print(element)
 
+
 def main():
-    dataset = data_loader.load_text_file("data_1.txt")
+    dataset = data_loader.load_text_file("data_3.txt")
     tokenizer = Tokenizer()
-    separated = tokenizer.tokenize(dataset)
+    separated = tokenizer.tokenize([dataset])
     morfeusz = MorfeuszWrapper()
     for sentence in separated:
         analysed = morfeusz.analyse(sentence)
