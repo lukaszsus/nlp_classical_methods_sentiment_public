@@ -3,14 +3,18 @@ from user_settings import PROJECT_PATH
 
 # \1 - first group found in regex
 # \g<0> - recursion in regex
+POLISH_UPPER_CASE_LETTERS = "[AaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]"
+
 PUNCTUATION = [
         (re.compile(r'([:,])([^\d])'), r' \1 '),    # : or , sticked to word after it (allows float numbers)
         (re.compile(r'([:,])$'), r' \1 '),          # : or , in the end of sentence
+        (re.compile(r'([(])'), r' \1 '),          # : handling (
+        (re.compile(r'([)])'), r' \1 '),           # : handling )
         (re.compile(r'\.\.\.'), r' ... '),          # ...
         (re.compile(r'[;#$%&]'), r' \g<0> '),      # strange characters, '@' removed for e-mail
-        (re.compile(r'[?!]'), r' \g<0> '),          # imo unnecessary
-        (re.compile(r"([^'])' "), r"\1 ' "),        # probably handling '"
-        (re.compile(r"([„'”])"), r" \1 "),               # '
+        (re.compile(r'[?!]'), r' \g<0> '),          # handling ? and !
+        (re.compile(r"([^'])' "), r"\1 ' "),        # probably handling '
+        (re.compile(r"([„'”])"), r" \1 "),          # '
         (re.compile(r'(")'), r' " ')                # "
     ]
 
@@ -21,8 +25,8 @@ END_CHARS = [
     (re.compile(r'(\.{3})([\s]+)'), r"\g<0> " + END_OF_SENTENCE),         # '...' usually finishes sentence in Polish
     (re.compile(r'([?]\s+)'), r"\1 " + END_OF_SENTENCE),
     (re.compile(r'([!]\s+)'), r"\1 " + END_OF_SENTENCE),
-    (re.compile(r'((\.) ([A-Z]))'), r" \g<2>" + END_OF_SENTENCE + r" \g<3>"), # new sentence starts with '. [UpperCaseLetter]'
-    (re.compile(r'((\.) ((\"|\'|\-)[A-Z]))'), r" \g<2>" + END_OF_SENTENCE + r" \g<3>"),  # new sentence starts with '. [" or ' or -][UpperCaseLetter]'
+    (re.compile(r'((\.) ([AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ]))'), r" \g<2>" + END_OF_SENTENCE + r" \g<3>"), # new sentence starts with '. [UpperCaseLetter]'
+    (re.compile(r'((\.) (("|\'|-)[AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ]))'), r" \g<2>" + END_OF_SENTENCE + r" \g<3>"),  # new sentence starts with '. [" or ' or -][UpperCaseLetter]'
 ]
 
 SHORTCUTS_EXCEPTION_FILEPATH = f"{PROJECT_PATH}/tokenizer/shortcuts_exceptions.txt"
