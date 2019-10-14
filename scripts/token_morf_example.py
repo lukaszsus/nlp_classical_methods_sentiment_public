@@ -9,7 +9,7 @@ def print_analysis(analysis):
 
 
 def main():
-    dataset = data_loader.load_text_file("data_3.txt")
+    dataset = data_loader.load_text_file("data_4.txt")
     tokenizer = Tokenizer()
     separated = tokenizer.tokenize([dataset])
     morfeusz = MorfeuszWrapper()
