@@ -1,0 +1,29 @@
+prof.:profesor
+doc.:docent
+hab.:habilitowany
+lek.:lekarz
+med.:medycyny
+szer.:szeregowy
+plut.:plutonowy
+kpr.:kapral
+sierż.:sierżant
+chor.:chorąży
+szt.:sztabowy
+ppor.:podporucznik
+por.:porucznik
+kpt.:kapitan
+gen. bryg.:generał brygady
+gen. dyw.:generał dywizji
+gen.:generał
+mar.:marszałek
+bsm.:bosman
+lic.:licencjat
+inż.:inżynier
+św.:święty
+pl.:plac
+al.:aleja
+ul.:ulica
+p.:pan
+P.:Pan
+r.:rok
+p.n.e.:przed naszą erą
