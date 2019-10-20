@@ -1,7 +1,7 @@
-from clarin_api_wrapper.calrin_api_wrapper import ClarinApiWrapper
+from clarin_api_wrapper.clarin_lexeme_api_wrapper import ClarinLexemeApiWrapper
 
 
-class MorfeuszWrapper(ClarinApiWrapper):
+class MorfeuszWrapperLexeme(ClarinLexemeApiWrapper):
     """
     Morfeusz tool has two tasks available:
         - analyse,

@@ -1,5 +1,5 @@
 import data_loader as data_loader
-from clarin_api_wrapper.morfeusz_wrapper import MorfeuszWrapper
+from clarin_api_wrapper.morfeusz_wrapper import MorfeuszWrapperLexeme
 from tokenizer.tokenizer import Tokenizer
 
 
@@ -12,7 +12,7 @@ def main():
     dataset = data_loader.load_text_file("data_2.txt")
     tokenizer = Tokenizer()
     separated = tokenizer.tokenize([dataset])
-    morfeusz = MorfeuszWrapper()
+    morfeusz = MorfeuszWrapperLexeme()
     for sentence in separated:
         analysed = morfeusz.analyse(sentence)
         for word, analysis in analysed.items():

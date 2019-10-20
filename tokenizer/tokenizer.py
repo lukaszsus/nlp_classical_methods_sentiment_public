@@ -76,7 +76,7 @@ class Tokenizer(object):
 
         return shortcuts
 
-    def tokenize(self, data) -> list:
+    def tokenize(self, data, with_notation=True) -> list:
         output = list()
         for text in data:
             text = text.replace("\n", "")
@@ -86,10 +86,11 @@ class Tokenizer(object):
                 output.append(self.tokenize_sentence(sentence))
 
         sentences = self.__merge_sentences_by_not_ending_shortcut(output)
-        sentences = self.get_with_tokens_notation(sentences)
-        sentences = [[self.check_possible_tokens_by_regexps(tokens) for tokens in tokenized] for tokenized in sentences]
-        sentences = [self.check_for_shortcuts_tokens(tokenized_sentence) for tokenized_sentence in sentences]
-        sentences = [self.replace_shortcuts_with_full_version(tokenized_sentence) for tokenized_sentence in sentences]
+        if with_notation:
+            sentences = self.get_with_tokens_notation(sentences)
+            sentences = [[self.check_possible_tokens_by_regexps(tokens) for tokens in tokenized] for tokenized in sentences]
+            sentences = [self.check_for_shortcuts_tokens(tokenized_sentence) for tokenized_sentence in sentences]
+            sentences = [self.replace_shortcuts_with_full_version(tokenized_sentence) for tokenized_sentence in sentences]
         return sentences
 
     def get_with_tokens_notation(self, sentences):

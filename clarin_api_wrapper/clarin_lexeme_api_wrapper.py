@@ -1,9 +1,7 @@
-from collections import OrderedDict
-
 import requests
 
 
-class ClarinApiWrapper():
+class ClarinLexemeApiWrapper():
     """
     Wrapper for requesting Clarin-Pl API.
     Class allows to send json requests to Clarin-Pl API.
@@ -16,7 +14,7 @@ class ClarinApiWrapper():
     """
     def __init__(self, tool: str = "all", task: str = "all"):
         """
-        Initializer for ClarinApiWrapper.
+        Initializer for ClarinLexemeApiWrapper.
         :param tool: 5 values available:
                     - morfeusz - morphological analyser and generator
                     - word2vec
