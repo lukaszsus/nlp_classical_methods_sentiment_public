@@ -4,7 +4,7 @@ from clarin_api_wrapper.morphodita_wrapper import MorphoditaWrapper
 
 
 def main():
-    file_path = "PolEmo/dataset_conll/all.sentence.test.txt"
+    file_path = "/dataset_conll/all.sentence.test.txt"
     dataset = data_loader.load_polemo_file(file_path)
     wcrft2 = Wcrft2Wrapper()
     morphodita = MorphoditaWrapper()
