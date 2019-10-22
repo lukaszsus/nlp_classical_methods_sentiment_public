@@ -1,51 +1,62 @@
-from clarin_api_wrapper import wcrft2_wrapper
-import xml.etree.ElementTree as ET
 from stop_words import get_stop_words
+
 
 class SentimentModel():
     def __init__(self, tagger_wrapper):
         self.tagger_wrapper = tagger_wrapper
         self.stop_words = get_stop_words("pl")
 
-    def fit(self, x_train, y_train):
-        tagger_analyzed = self.analyze_data_with_tagger(x_train)
+    def fit(self, x_train, y_train, part_of_speech=None):
+        """
+        Fit model to training set.
+        :param x_train:
+        :param y_train:
+        :param part_of_speech: possible values: verb, noun, adjective, None
+        :return:
+        """
+        tagger_analyzed = self.tagger_wrapper.analyse(" EOF ".join(list(x_train)) + "EOF")
         print("Got data analyzed by tagger")
         print(tagger_analyzed)
         filter_out_interp = self.filter_out_tokens_tags(tagger_analyzed, ['interp'])
         print(filter_out_interp)
-        lemmatized_texts = self.get_lemmatized_sentences(filter_out_interp)
+        filter_in_form_class = self.filter_in_part_of_speech(filter_out_interp, part_of_speech=part_of_speech)
+        print(filter_in_form_class)
+        lemmatized_texts = self.get_lemmatized_sentences(filter_in_form_class)
         print(lemmatized_texts)
         removed_stop_words = self.remove_stop_words(lemmatized_texts)
         print(removed_stop_words)
         print("Got lematized texts")
 
-    def analyze_data_with_tagger(self, x_train):
-        result = self.tagger_wrapper.analyse(" EOF ".join(list(x_train)) + "EOF")
-        root = ET.fromstring(result)
-        sentences = []
-        print("Got data from tagger")
-        tokens = []
-        for chunk in root:
-            sent = chunk.find("sentence")
-            for token in sent.iter('tok'):
-                result_token = {}
-                orth = token.find("orth")
-                lex = token.find("lex")
-                orth_text = orth.text
-                result_token['orth'] = orth_text
-                result_token['lex'] = {
-                    'disamb': lex.get("disamb"),
-                    'base': lex.find("base").text,
-                    'ctag': lex.find("ctag").text,
-                }
+    def filter_in_part_of_speech(self, data, part_of_speech: str = None):
+        """
+        :param data: list of tagged sentences
+        :param part_of_speech: possible values: verb, noun, adjective, None
+        :return: filtered tags, if form_class is None, then leave all tags (nothing is filter out)
+        """
+        if part_of_speech is None:
+            return data
+        else:
+            tags = self.__get_part_of_speech_tags(part_of_speech)
+        new_data = []
 
-                if orth_text == "EOF":
-                    sentences.append(tokens)
-                    tokens = []
-                else:
-                    tokens.append(result_token)
+        for sentence in data:
+            tokens = [token for token in sentence if any(tag in token['lex']['ctag'] for tag in tags)]
+            new_data.append(tokens)
 
-        return sentences
+        return new_data
+
+    def __get_part_of_speech_tags(self, form_class: str):
+        """
+        :param form_class: possible values: verb, noun, adjective, None
+        :return: nkjp tags appropriate for form class
+        """
+        if form_class == 'verb':
+            return ['fin', 'bedzie', 'aglt', 'praet', 'impt', 'imps', 'inf', 'pcon',
+                    'pant', 'ger', 'pact', 'ppas', 'winien']
+        if form_class == 'noun':
+            return ['subst', 'depr']
+        if form_class == 'adj':
+            return ['adj', 'adja', 'adjp', 'adjc']
 
     def filter_out_tokens_tags(self, data, tags):
         new_data = []
