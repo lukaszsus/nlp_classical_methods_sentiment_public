@@ -30,7 +30,7 @@ class ClarinLexemeApiWrapper():
         self.__tool = tool
         self.__task = task
 
-    def request(self, lexeme, task=None) -> list:
+    def request(self, lexeme, task=None):
         if task is None:
             task = self.__task
         input_json = self._create_input_json(lexeme, task)
