@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import re
 from settings import PATH_TO_DATA
+import json
+import pickle
 
 POL_EMO_CLASSES_TO_INDEXES = {
     'minus_m': 0,
@@ -34,3 +36,33 @@ def load_polemo_file(file_path):
         dataset.append([x[0], POL_EMO_CLASSES_TO_INDEXES[x[1]]])
 
     return pd.DataFrame(dataset)
+
+
+def load_polemo_no_segm_file(file_path):
+    dataset = []
+    f = open(os.path.join(PATH_TO_DATA, file_path), "r")
+    for x in f:
+        x = x.replace("\n", "").replace("\t", " ")
+        splitted = x.split(" ")
+        label = splitted[0].replace("meta_", "")
+        sentence = " ".join(splitted[1:])
+
+        dataset.append([sentence, POL_EMO_CLASSES_TO_INDEXES[label]])
+
+    return pd.DataFrame(dataset)
+
+
+def load_tagger_preprocesses_data_file(file_path):
+    return pd.read_csv(file_path, index_col=0)
+
+
+def load_tagger_preprocesses_json_file(file_path):
+    with open(file_path, 'r') as outfile:
+        return np.array(json.load(outfile))
+
+
+def load_train_test_idx_file(file_path):
+    pkl_file = open(file_path, 'rb')
+    content = pickle.load(pkl_file)
+    pkl_file.close()
+    return content['train_idx'], content['test_idx']
