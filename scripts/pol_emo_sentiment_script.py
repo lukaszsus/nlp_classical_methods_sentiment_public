@@ -13,7 +13,7 @@ def main():
     x_test, y_test = test_data.values[:, 0], test_data.values[:, 1]
 
     model = SentimentModel(tagger_wrapper=Wcrft2Wrapper())
-    model.fit(x_train[:100], y_train[:100])
+    model.fit(x_train[:100], y_train[:100], part_of_speech=None)
 
 
 if __name__ == '__main__':

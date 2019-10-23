@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import pandas as pd
 import re
 from settings import PATH_TO_DATA
@@ -27,7 +28,7 @@ def load_text_file(filename):
 
 def load_polemo_file(file_path):
     dataset = []
-    f = open(f"{PATH_TO_DATA}/{file_path}", "r")
+    f = open(os.path.join(PATH_TO_DATA, file_path), "r")
     for x in f:
         x = x.replace("\n", "").split("__label__z_")
         dataset.append([x[0], POL_EMO_CLASSES_TO_INDEXES[x[1]]])
