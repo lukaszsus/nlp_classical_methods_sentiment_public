@@ -51,16 +51,18 @@ class MorfeuszWrapperLexeme(ClarinLexemeApiWrapper):
         return xml
 
     def __insert_lex_to_xml(self, tok, proposition):
-        proposition[2] = proposition[2].replace(":_", "")
-        m = re.search(r"(.+:)([^:]+)\.([^:]+)(:.+)", proposition[2])
-        if m:
-            before = m.group(1)
-            tag1 = m.group(2)
-            tag2 = m.group(3)
-            after = m.group(4)
-            self.__insert_lex_to_xml(tok, [proposition[0], proposition[1], before + tag1 + after])
-            self.__insert_lex_to_xml(tok, [proposition[0], proposition[1], before + tag2 + after])
-        else:
-            lex = ET.SubElement(tok, "lex")
-            ET.SubElement(lex, "base").text = proposition[1]
-            ET.SubElement(lex, "ctag").text = proposition[2]
+        # proposition[2] = proposition[2].replace(":_", "")
+        # proposition[2] = proposition[2].replace(":n2", ":n")
+        # proposition[2] = proposition[2].replace("dig", "num")
+        # m = re.search(r"(.+:)([^:]+)\.([^:]+)(:.+)", proposition[2])
+        # if m:
+        #     before = m.group(1)
+        #     tag1 = m.group(2)
+        #     tag2 = m.group(3)
+        #     after = m.group(4)
+        #     self.__insert_lex_to_xml(tok, [proposition[0], proposition[1], before + tag1 + after])
+        #     self.__insert_lex_to_xml(tok, [proposition[0], proposition[1], before + tag2 + after])
+        # else:
+        lex = ET.SubElement(tok, "lex")
+        ET.SubElement(lex, "base").text = proposition[1]
+        ET.SubElement(lex, "ctag").text = proposition[2]
