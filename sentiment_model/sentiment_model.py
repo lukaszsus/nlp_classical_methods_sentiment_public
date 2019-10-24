@@ -47,6 +47,7 @@ class SentimentModel():
 
     def fit_nb_model(self, X_train, y_train):
         x_train = X_train.toarray()
+        print(x_train.shape)
         y_train = y_train.squeeze().astype(int)
         self.nb_model.fit(x_train, y_train)
 

@@ -10,7 +10,7 @@ import numpy as np
 def main():
     train_data = load_polemo_no_segm_file("plemo2.0-no-segm.txt")
     preprocessed_data = load_tagger_preprocesses_json_file(
-        f"{PATH_TO_DATA}/taggers_output/wcrft2/plemo_no_segm_data.json")
+        f"{PATH_TO_DATA}/taggers_output/krnnt/plemo_no_segm_data.json")
     train_idx, test_idx = load_train_test_idx_file(f"{PATH_TO_DATA}/train_test_idx.pkl")
     x_data, y_data = train_data.values[:, 0], train_data.values[:, 1].astype(int)
 
@@ -20,8 +20,8 @@ def main():
     preprocessed_train, preprocessed_test = preprocessed_data[train_idx], preprocessed_data[test_idx]
 
     model = SentimentModel(tagger_wrapper=Wcrft2Wrapper())
-    model.fit(preprocessed_train, y_train, part_of_speech=None, tagger_preprocessed=True)
-    y_pred = model.predict(preprocessed_test, part_of_speech=None, tagger_preprocessed=True)
+    model.fit(preprocessed_train, y_train, part_of_speech="verb", tagger_preprocessed=True)
+    y_pred = model.predict(preprocessed_test, part_of_speech="verb", tagger_preprocessed=True)
 
     print(accuracy_score(y_test, y_pred))
 
