@@ -26,4 +26,4 @@ ul.:ulica
 p.:pan
 P.:Pan
 r.:rok
-p.n.e.:przed naszą erą
+p.n.e.:przed_naszą_erą

@@ -14,11 +14,11 @@ def main():
     separated = tokenizer.tokenize([dataset])
     morfeusz = MorfeuszWrapperLexeme()
     for sentence in separated:
-        analysed = morfeusz.analyse([w for w, tag in sentence], as_xml=True)
+        analysed = morfeusz.analyse([w for w, tag in sentence])
         print(analysed)
-        # for word, analysis in analysed.items():
-        #     print("{}:".format(word))
-        #     print_analysis(analysis)
+        for word, analysis in analysed.items():
+            print("{}:".format(word))
+            print_analysis(analysis)
         print()
 
 
