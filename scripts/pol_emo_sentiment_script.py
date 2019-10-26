@@ -1,5 +1,4 @@
-from data_loader import load_polemo_file, load_polemo_no_segm_file, load_tagger_preprocesses_data_file, \
-    load_tagger_preprocesses_json_file, load_train_test_idx_file
+from data_loader import load_polemo_no_segm_file, load_tagger_preprocesses_json_file, load_train_test_idx_file
 from sentiment_model.sentiment_model import SentimentModel
 from clarin_api_wrapper.wcrft2_wrapper import Wcrft2Wrapper
 from settings import PATH_TO_DATA
