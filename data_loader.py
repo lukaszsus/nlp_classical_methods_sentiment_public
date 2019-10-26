@@ -66,3 +66,7 @@ def load_train_test_idx_file(file_path):
     content = pickle.load(pkl_file)
     pkl_file.close()
     return content['train_idx'], content['test_idx']
+
+def load_tagger_output(file_path):
+    with open(file_path, 'r') as outfile:
+        return np.array(json.load(outfile))
