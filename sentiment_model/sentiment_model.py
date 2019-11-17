@@ -1,6 +1,8 @@
 from stop_words import get_stop_words
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
+from tokenizer.tokenizer import Tokenizer
+import numpy as np
 
 class SentimentModel():
     def __init__(self, tagger_wrapper):
@@ -17,20 +19,41 @@ class SentimentModel():
         :param part_of_speech: possible values: verb, noun, adjective, None
         :return:
         """
-        preprocessed = self.preprocess_texts(x_train, part_of_speech=part_of_speech, tagger_preprocessed=tagger_preprocessed)
+        preprocessed = self.preprocess_texts(x_train, part_of_speech=part_of_speech,
+                                             tagger_preprocessed=tagger_preprocessed)
         X = self.fit_vectorizer(preprocessed)
         self.fit_nb_model(X_train=X, y_train=y_train)
         print("Got lematized texts")
 
-    def predict(self, X, part_of_speech=None, tagger_preprocessed=False):
-        preprocessed = self.preprocess_texts(X, part_of_speech=part_of_speech,
-                                             tagger_preprocessed=tagger_preprocessed)
-        X = self.vectorizer.transform(preprocessed).toarray()
-        return self.nb_model.predict(X)
+    def predict(self, X, part_of_speech=None, tagger_preprocessed=False, sentence_level=False):
+
+        i = 0
+        if sentence_level:
+            results = []
+            for text in X:
+                tokenizer = Tokenizer()
+                sentences = tokenizer.tokenize([text])
+                sentences = [" ".join([token[0] for token in sentence]) for sentence in sentences]
+
+                preprocessed_sentences = self.preprocess_texts(sentences, part_of_speech=part_of_speech,
+                                                         tagger_preprocessed=tagger_preprocessed)
+
+                X = self.vectorizer.transform(preprocessed_sentences).toarray()
+                pred = self.nb_model.predict(X)
+                results.append(int(round(np.mean(pred))))
+                print(i)
+                i += 1
+            return np.array(results)
+
+        else:
+            preprocessed = self.preprocess_texts(X, part_of_speech=part_of_speech,
+                                                 tagger_preprocessed=tagger_preprocessed)
+            X = self.vectorizer.transform(preprocessed).toarray()
+            return self.nb_model.predict(X)
 
     def preprocess_texts(self, texts, part_of_speech=None, tagger_preprocessed=False):
         if not tagger_preprocessed:
-            tagger_analyzed = self.tagger_wrapper.analyse(" EOF ".join(list(texts)) + "EOF")
+            tagger_analyzed = self.tagger_wrapper.analyse(" EOF ".join(list(texts)) + " EOF ")
         else:
             tagger_analyzed = texts
 

@@ -31,7 +31,7 @@ def main():
     # results_df = pd.DataFrame(data=np.array([results, y_data]).transpose())
     # results_df.to_csv(f"{PATH_TO_DATA}/taggers_output/morphodita/plemo_no_segm_data.csv")
 
-    with open(f"{PATH_TO_DATA}/taggers_output/krnnt/plemo_no_segm_data.json", 'w') as outfile:
+    with open(f"{PATH_TO_DATA}/taggers_output/krnnt/plemo_no_segm_data_sentences.json", 'w') as outfile:
         json.dump(results, outfile)
 
 
